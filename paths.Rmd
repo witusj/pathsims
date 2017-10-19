@@ -5,7 +5,7 @@ output: html_notebook
 
 Load libraries
 
-```{r}
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
 library(tidyverse)
 library(plotly)
 ```
@@ -35,7 +35,7 @@ SimPath(100, 0.10, 0.01, 3)
 
 Create graphs
 
-```{r}
+```{r message=FALSE, warning=FALSE}
 # Input data
 mean <- 0.30
 sd <- 0.20
@@ -55,7 +55,7 @@ while(n < 400) {
 pathsDF$run <- as.factor(pathsDF$run)
 p <- ggplot() +
   geom_line(data = pathsDF, aes(x=sim, y=values, group=run), colour="Red", alpha=1/10) +
-  geom_point(data = expDF, aes(x=x, y=y, text=sprintf("Expected end value")), colour = "RoyalBlue", size=3) +
+  geom_point(data = expDF, aes(x=x, y=y, text="Expected end value"), colour = "RoyalBlue", size=3) +
   theme(legend.position="none")
 
 ggplotly(p)

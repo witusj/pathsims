@@ -37,22 +37,25 @@ Create graphs
 
 ```{r}
 # Input data
-mean <- 0.20
-sd <- 0.30
+mean <- 0.30
+sd <- 0.20
 t <- 8
+expval <- 100*(1+mean)^t
+expDF <- data.frame(x=t, y=expval)
 
 # Start calculations
 n <- 1
 pathsDF <- cbind(run = rep(n,t+1), SimPath(100, mean, sd, t))
-while(n < 100) {
+while(n < 400) {
   n <- n + 1
   run <- rep(n,t+1)
   pathsDF <- rbind(pathsDF, cbind(run, SimPath(100, mean, sd, t)))
   
 }
 pathsDF$run <- as.factor(pathsDF$run)
-p <- ggplot(pathsDF, aes(x=sim, y=values, group=run, colour="Red", alpha=1/10)) +
-  geom_line() +
+p <- ggplot() +
+  geom_line(data = pathsDF, aes(x=sim, y=values, group=run), colour="Red", alpha=1/10) +
+  geom_point(data = expDF, aes(x=x, y=y, text=sprintf("Expected end value")), colour = "RoyalBlue", size=3) +
   theme(legend.position="none")
 
 ggplotly(p)

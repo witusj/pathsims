@@ -1,0 +1,61 @@
+---
+title: "Simulate random paths"
+output: html_notebook
+---
+
+Load libraries
+
+```{r}
+library(tidyverse)
+library(plotly)
+```
+
+
+
+Make function to simulate paths 
+
+```{r}
+SimPath <- function(startvalue=100, meangrowth=0.1, sd=0.01, iterations=10) {
+  
+  i <- 0
+  sim <- c(i)
+  values <- c(startvalue)
+  
+  while(i < iterations) {
+    i <- i+1
+    sim <- c(sim, i)
+    g <- rnorm(1, meangrowth, sd)
+    values <- c(values, values[i]*(1+g))
+  }
+  return(data.frame(sim, values))
+}
+
+SimPath(100, 0.10, 0.01, 3)
+```
+
+Create graphs
+
+```{r}
+# Input data
+mean <- 0.20
+sd <- 0.30
+t <- 8
+
+# Start calculations
+n <- 1
+pathsDF <- cbind(run = rep(n,t+1), SimPath(100, mean, sd, t))
+while(n < 100) {
+  n <- n + 1
+  run <- rep(n,t+1)
+  pathsDF <- rbind(pathsDF, cbind(run, SimPath(100, mean, sd, t)))
+  
+}
+pathsDF$run <- as.factor(pathsDF$run)
+p <- ggplot(pathsDF, aes(x=sim, y=values, group=run, colour="Red", alpha=1/10)) +
+  geom_line() +
+  theme(legend.position="none")
+
+ggplotly(p)
+```
+
+
